@@ -38,14 +38,14 @@ st.select_slider('Speaking',['Beginner','Intermediate','Advanced','Superior'])
 st.divider()
 
 #Choosing between American/European Frameworks
-frameworks = 'Choose between one of the following frameworks.'
+frameworks = 'Choose between one of the following frameworks. Check the boxes that you are confident you can perform 95 percent of the time. Be sure to check the box only if you can consistently achieve this level of proficiency in reading, writing, listening, or speaking.'
 st.markdown(f"<div style='text-align: justify;'>{frameworks}</div>", unsafe_allow_html=True)
-selected_framework = st.radio('',['ACTFUL (American Council of the Teaching of Foreign Language)','CEFRL (Common European Framework of Reference for Languages)'])
+selected_framework = st.radio('',['ACTFL (American Council of the Teaching of Foreign Language)','CEFRL (Common European Framework of Reference for Languages)'])
 st.divider()
 
 
 #Proficiency levels and their descriptions (Reading)
-actful_levels = {
+actfl_levels = {
     'Novice_Low_R': 'I can identify memorized or familiar words when they are supported by gestures or visuals in informational texts.',
     'Novice_Mid_R': 'I can identify some basic facts from memorized words and phrases when they are supported by gestures or visuals in informational texts.',
     'Novice_High_R': 'I can identify some basic facts from memorized words and phrases when they are supported by gestures or visuals in informational texts.',
@@ -59,22 +59,21 @@ actful_levels = {
 }
 
 #checkboxes with unique keys (Reading)
-def actful_questions():
-    st.write("ACTFUL Reading Proficiency Questions")
+def actfl_questions():
     selected_levels = []
-    for level, description in actful_levels.items():
+    for level, description in actfl_levels.items():
         if st.checkbox(description, key=level):  
             selected_levels.append(level)
     return selected_levels
 
 # Show questions based on the framework selected (Reading)
-if selected_framework == 'ACTFUL (American Council of the Teaching of Foreign Language)':
-    selected_levels = actful_questions()
-st.divider()
+with st.expander('ACTFL Reading Proficiency Questions'):
+    if selected_framework == 'ACTFL (American Council of the Teaching of Foreign Language)':
+        selected_levels = actfl_questions()
 
 
 #Proficiency levels and their descriptions (Listening)
-actful_levels = {
+actfl_levels = {
     'Novice_Low_L': 'I can understand memorized or familiar words when they are supported by gestures or visuals in conversations.',
     'Novice_Mid_L': 'I can understand memorized or familiar words when they are supported by gestures or visuals in conversations.',
     'Novice_High_L': 'I can understand familiar questions and statements from simple sentences in conversations.',
@@ -88,22 +87,21 @@ actful_levels = {
 }
 
 #checkboxes with unique keys (Listening)
-def actful_questions():
-    st.write("ACTFUL Listening Proficiency Questions")
+def actfl_questions():
     selected_levels = []
-    for level, description in actful_levels.items():
+    for level, description in actfl_levels.items():
         if st.checkbox(description, key=level):  
             selected_levels.append(level)
     return selected_levels
 
 # Show questions based on the framework selected (Listening)
-if selected_framework == 'ACTFUL (American Council of the Teaching of Foreign Language)':
-    selected_levels = actful_questions()
-st.divider()
+with st.expander('ACTFL Listening Proficiency Questions'):
+    if selected_framework == 'ACTFL (American Council of the Teaching of Foreign Language)':
+        selected_levels = actfl_questions()
 
 
 #Proficiency levels and their descriptions (Writing)
-actful_levels = {
+actfl_levels = {
     'Novice_Low_W': 'I can introduce myself using practiced or memorized words and phrases, with the help of gestures or visuals.',
     'Novice_Mid_W': 'I can present information about myself, my interests and my activities using a mixture of practiced or memorized words, phrases and simple sentences.',
     'Novice_High_W': 'I can present personal information about my life and activities, using simple sentences most of the time.',
@@ -117,22 +115,21 @@ actful_levels = {
 }
 
 #checkboxes with unique keys (Writing)
-def actful_questions():
-    st.write("ACTFUL Writing Proficiency Questions")
+def actfl_questions():
     selected_levels = []
-    for level, description in actful_levels.items():
+    for level, description in actfl_levels.items():
         if st.checkbox(description, key=level):  
             selected_levels.append(level)
     return selected_levels
 
 # Show questions based on the framework selected (Writing)
-if selected_framework == 'ACTFUL (American Council of the Teaching of Foreign Language)':
-    selected_levels = actful_questions()
-st.divider()
+with st.expander('ACTFL Writing Proficiency Questions'):
+    if selected_framework == 'ACTFL (American Council of the Teaching of Foreign Language)':
+        selected_levels = actfl_questions()
 
 
 #Proficiency levels and their descriptions (Speaking)
-actful_levels = {
+actfl_levels = {
     'Novice_Low_S': 'I can provide information by answering a few simple questions on very familiar topics, using practiced or memorized words and phrases, with the help of gestures or visuals.',
     'Novice_Mid_S': 'I can request and provide information by asking and answering a few simple questions on very familiar and everyday topics, using a mixture of practiced or memorized words, phrases, and simple sentences.',
     'Novice_High_S': 'I can request and provide information by asking and answering practiced and some original questions on familiar and everyday topics, using simple sentences most of the time.',
@@ -146,17 +143,116 @@ actful_levels = {
 }
 
 #checkboxes with unique keys (Speaking)
-def actful_questions():
-    st.write("ACTFUL Speaking Proficiency Questions")
+def actfl_questions():
     selected_levels = []
-    for level, description in actful_levels.items():
+    for level, description in actfl_levels.items():
         if st.checkbox(description, key=level):  
             selected_levels.append(level)
     return selected_levels
 
 # Show questions based on the framework selected (Speaking)
-if selected_framework == 'ACTFUL (American Council of the Teaching of Foreign Language)':
-    selected_levels = actful_questions()
+with st.expander('ACTFL Speaking Proficiency Questions'):
+    if selected_framework == 'ACTFL (American Council of the Teaching of Foreign Language)':
+        selected_levels = actfl_questions()
+
+
+#Proficiency levels and their descriptions (Reading)
+cefrl_levels = {
+    'A1_R': 'I can understand familiar names, words and very simple sentences, for examples on notices and posters or in catalogues.',
+    'A2_R': 'I can read very short, simple texts. I can find specific, predictable information in simple everyday material such as advertisements, prospectuses, menus and timetables and I can understand short simple personal letters.',
+    'B1.2_R': 'I can understand texts that consist mainly of high frequency everyday or job-related language. I can understand the description of events, feelings and wishes in personal letters.',
+    'B2.2_R': 'I can read articles and reports concerned with contemporary problems in which the writers adopt particular attitudes or viewpoints. I can understand contemporary literary prose.',
+    'C1_R': 'I can understand long and complex factual and literary texts, appreciating distinctions of style. I can understand specialised articles and longer technical instructions, even when they do not relate to my field.',
+    'C2_R': 'I can read with ease virtually all forms of the written language, including abstract, structurally or linguistically complex texts such as manuals, specialised articles and literary works.',
+}
+
+#checkboxes with unique keys (Reading)
+def cefrl_questions():
+    selected_levels = []
+    for level, description in cefrl_levels.items():
+        if st.checkbox(description, key=level):  
+            selected_levels.append(level)
+    return selected_levels
+
+# Show questions based on the framework selected (Reading)
+with st.expander('CEFRL Reading Proficiency Questions'):
+    if selected_framework == 'CEFRL (Common European Framework of Reference for Languages)':
+        selected_levels = cefrl_questions()
+
+
+#Proficiency levels and their descriptions (listening)
+cefrl_levels = {
+    'A1_L': 'I can recognize familiar words and very basic phrases concerning myself, my family and immediate concrete surroundings when people speak slowly and clearly.',
+    'A2_L': 'I can understand phrases and the highest frequency vocabulary related to areas of most immediate personal relevance (e.g. very basic personal and family information, shopping, local area, employment). I can catch the main point in short, clear, simple messages and announcements.',
+    'B1.2_L': 'I can understand the main points of clear standard speech on familiar matters regularly encountered in work, school, leisure, etc. I can understand the main point of many radio or TV programmes on current affairs or topics of personal or professional interest when the delivery is relatively slow and clear.',
+    'B2.2_L': 'I can understand extended speech and lectures and follow even complex lines of argument provided the topic is reasonably familiar. I can understand most TV news and current affairs programmes. I can understand the majority of films in standard direct.',
+    'C1_L': 'I can understand extended speech even when it is not clearly structured and when relationships are only implied and not signalled explicitly. I can understand television programmes and films without too much effort.',
+    'C2_L': 'I have no difficulty in understanding any kind of spoken language, whether live or broadcast, even when delivered at fast native speed, provided I have some time to get familiar with the accent.',
+}
+
+#checkboxes with unique keys (Listening)
+def cefrl_questions():
+    selected_levels = []
+    for level, description in cefrl_levels.items():
+        if st.checkbox(description, key=level):  
+            selected_levels.append(level)
+    return selected_levels
+
+# Show questions based on the framework selected (Listening)
+with st.expander('CEFRL Listening Proficiency Questions'):
+    if selected_framework == 'CEFRL (Common European Framework of Reference for Languages)':
+        selected_levels = cefrl_questions()
+
+
+#Proficiency levels and their descriptions (Writing)
+cefrl_levels = {
+    'A1_W': 'I can write a short, simple postcard, for example sending holiday greetings. I can fill in forms with personal details, for example entering my name, nationality and address on a hotel registration form.',
+    'A2_W': 'I can write short, simple notes and messages relating to matters in areas of immediate need. I can write a very simple personal letter, for example thanking someone for something.',
+    'B1.2_W': 'I can write simple connected text on topics which are familiar or of personal interest. I can write personal letters describing experiences and impressions.',
+    'B2.2_W': 'I can write clear, detailed text on a wide range of subjects related to my interests. I can write an essay or report, passing on information or giving reasons in support of or against a particular point of view. I can write letters highlighting the personal significance of events and experiences.',
+    'C1_W': 'I can express myself in clear, well- structured text, expressing points of view at some length. I can write about complex subjects in a letter, an essay or a report, underlining what I consider to be the salient issues. I can select style appropriate to the reader in mind.',
+    'C2_W': 'I can write clear, smoothly flowing text in an appropriate style. I can write complex letters, reports or articles which preset a case with an effective logical structure which helps the recipient to notice and remember significant points. I can write summaries and reviews of professional or literary works.',
+}
+
+#checkboxes with unique keys (Writing)
+def cefrl_questions():
+    selected_levels = []
+    for level, description in cefrl_levels.items():
+        if st.checkbox(description, key=level):  
+            selected_levels.append(level)
+    return selected_levels
+
+# Show questions based on the framework selected (Writing)
+with st.expander('CEFRL Writing Proficiency Questions'):
+    if selected_framework == 'CEFRL (Common European Framework of Reference for Languages)':
+        selected_levels = cefrl_questions()
+
+
+#Proficiency levels and their descriptions (Speaking)
+cefrl_levels = {
+    'A1_S': 'I can understand familiar names, words and very simple sentences, for examples on notices and posters or in catalogues.',
+    'A2_S': 'I can read very short, simple texts. I can find specific, predictable information in simple everyday material such as advertisements, prospectuses, menus and timetables and I can understand short simple personal letters.',
+    'B1.2_S': 'I can understand texts that consist mainly of high frequency everyday or job-related language. I can understand the description of events, feelings and wishes in personal letters.',
+    'B2.2_S': 'I can read articles and reports concerned with contemporary problems in which the writers adopt particular attitudes or viewpoints. I can understand contemporary literary prose.',
+    'C1_S': 'I can understand long and complex factual and literary texts, appreciating distinctions of style. I can understand specialised articles and longer technical instructions, even when they do not relate to my field.',
+    'C2_S': 'I can read with ease virtually all forms of the written language, including abstract, structurally or linguistically complex texts such as manuals, specialised articles and literary works.',
+}
+
+#checkboxes with unique keys (Speaking)
+def cefrl_questions():
+    selected_levels = []
+    for level, description in cefrl_levels.items():
+        if st.checkbox(description, key=level):  
+            selected_levels.append(level)
+    return selected_levels
+
+# Show questions based on the framework selected (Speaking)
+with st.expander('CEFRL Speaking Proficiency Questions'):
+    if selected_framework == 'CEFRL (Common European Framework of Reference for Languages)':
+        selected_levels = cefrl_questions()
+
 st.divider()
 
+st.write('the diagram')
 
+st.write('download')
