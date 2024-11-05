@@ -1,12 +1,24 @@
 import streamlit as st
+import time
+import pandas as pd
+import matplotlib.pyplot as plt
+
+#Recording the start time
+start_time = time.time()
 
 #Header
 st.header('French Language Self-Assessment')
 
 #Data Privacy Section
-privacy_text = 'This tool allows you to self-assess your language proficiency. The results will help us refine the teaching curriculum and enhance our understanding of how best to support student learning. While the data will be anonymized, you have the option to withhold your data if you prefer. Please select one of the following options to indicate your data privacy preference:'
+privacy_text = 'This tool allows you to self-assess your language proficiency. Please complete this assessment in <b>one sitting</b>. If you exit the page, your information will not be saved, and you will must restart. The results will help us refine the teaching curriculum and enhance our understanding of how best to support student learning. While the data will be <b>anonymized</b> and <b>only shared with the researcher</b>, you can withhold your data if you prefer. Please select one of the following options to indicate your data privacy preference.'
 st.markdown(f"<div style='text-align: justify;'>{privacy_text}</div>", unsafe_allow_html=True)
 st.radio('',['I consent to sharing my data','I do not consent to sharing my data'])
+st.divider()
+
+#Age
+Age = 'What is your age?'
+st.markdown(f"<div style='text-align: justify;'>{Age}</div>", unsafe_allow_html=True)
+st.number_input('', min_value=0, max_value=120, step=1)
 st.divider()
 
 #French speaking environment
@@ -18,10 +30,10 @@ st.divider()
 #Previous experience: Semesters and Quarters
 semesters = 'How many semesters have you completed?'
 st.markdown(f"<div style='text-align: justify;'>{semesters}</div>", unsafe_allow_html=True)
-st.text_input('')
+st.number_input(' ', min_value=0, max_value=120, step=1)
 quarters = 'How many quarters have you completed?'
 st.markdown(f"<div style='text-align: justify;'>{quarters}</div>", unsafe_allow_html=True)
-st.text_input(' ')
+st.number_input('  ', min_value=0, max_value=120, step=1)
 st.divider()
 
 #Current perception of student on their profeciency level
@@ -38,14 +50,14 @@ st.select_slider('Speaking',['Beginner','Intermediate','Advanced','Superior'])
 st.divider()
 
 #Choosing between American/European Frameworks
-frameworks = 'Choose between one of the following frameworks. Check the boxes that you are confident you can perform 95 percent of the time. Be sure to check the box only if you can consistently achieve this level of proficiency in reading, writing, listening, or speaking.'
+frameworks = 'Choose between one of the following language frameworks. Check the boxes that you are confident you can perform <b>95 percent</b> of the time. Be sure to check the box only if you can <b>consistently</b> achieve this level of proficiency in reading, writing, listening, or speaking. Please read each description carefully and select the checkboxes <b>in order</b>. Ensure that you check each box <b>sequentially</b> (i.e., start with 1, then 2, and so on) before moving to the next.'
 st.markdown(f"<div style='text-align: justify;'>{frameworks}</div>", unsafe_allow_html=True)
 selected_framework = st.radio('',['ACTFL (American Council of the Teaching of Foreign Language)','CEFRL (Common European Framework of Reference for Languages)'])
 st.divider()
 
 
 #Proficiency levels and their descriptions (Reading)
-actfl_levels = {
+actfl_levels_reading = {
     'Novice_Low_R': 'I can identify memorized or familiar words when they are supported by gestures or visuals in informational texts.',
     'Novice_Mid_R': 'I can identify some basic facts from memorized words and phrases when they are supported by gestures or visuals in informational texts.',
     'Novice_High_R': 'I can identify some basic facts from memorized words and phrases when they are supported by gestures or visuals in informational texts.',
@@ -58,10 +70,10 @@ actfl_levels = {
     'Superior_R': 'I can read with ease virtually all forms of the written language, including abstract, structurally or linguistically complex texts such as manuals, specialised articles and literary works.'
 }
 
-#checkboxes with unique keys (Reading)
-def actfl_questions():
+# Define functions for each proficiency category to avoid overwriting actfl_levels (Reading)
+def actfl_reading_questions():
     selected_levels = []
-    for level, description in actfl_levels.items():
+    for level, description in actfl_levels_reading.items():
         if st.checkbox(description, key=level):  
             selected_levels.append(level)
     return selected_levels
@@ -69,11 +81,11 @@ def actfl_questions():
 # Show questions based on the framework selected (Reading)
 with st.expander('ACTFL Reading Proficiency Questions'):
     if selected_framework == 'ACTFL (American Council of the Teaching of Foreign Language)':
-        selected_levels = actfl_questions()
+        selected_levels = actfl_reading_questions()
 
 
 #Proficiency levels and their descriptions (Listening)
-actfl_levels = {
+actfl_levels_listening = {
     'Novice_Low_L': 'I can understand memorized or familiar words when they are supported by gestures or visuals in conversations.',
     'Novice_Mid_L': 'I can understand memorized or familiar words when they are supported by gestures or visuals in conversations.',
     'Novice_High_L': 'I can understand familiar questions and statements from simple sentences in conversations.',
@@ -86,10 +98,10 @@ actfl_levels = {
     'Superior_L': 'I can follow abstract, complex and unfamiliar topics in extended conversations and discussions involving multiple speakers.'
 }
 
-#checkboxes with unique keys (Listening)
-def actfl_questions():
+# Define functions for each proficiency category to avoid overwriting actfl_levels (Listening)
+def actfl_listening_questions():
     selected_levels = []
-    for level, description in actfl_levels.items():
+    for level, description in actfl_levels_listening.items():
         if st.checkbox(description, key=level):  
             selected_levels.append(level)
     return selected_levels
@@ -97,11 +109,11 @@ def actfl_questions():
 # Show questions based on the framework selected (Listening)
 with st.expander('ACTFL Listening Proficiency Questions'):
     if selected_framework == 'ACTFL (American Council of the Teaching of Foreign Language)':
-        selected_levels = actfl_questions()
+        selected_levels = actfl_listening_questions()
 
 
 #Proficiency levels and their descriptions (Writing)
-actfl_levels = {
+actfl_levels_writing = {
     'Novice_Low_W': 'I can introduce myself using practiced or memorized words and phrases, with the help of gestures or visuals.',
     'Novice_Mid_W': 'I can present information about myself, my interests and my activities using a mixture of practiced or memorized words, phrases and simple sentences.',
     'Novice_High_W': 'I can present personal information about my life and activities, using simple sentences most of the time.',
@@ -114,10 +126,10 @@ actfl_levels = {
     'Superior_W': 'I can deliver extended presentations on abstract or hypothetical issues and ideas ranging from broad general interests to my areas of specialized expertise, with precision of expression and to a wide variety of audiences, using spoken, written, or signed language.'
 }
 
-#checkboxes with unique keys (Writing)
-def actfl_questions():
+# Define functions for each proficiency category to avoid overwriting actfl_levels (Writing)
+def actfl_writing_questions():
     selected_levels = []
-    for level, description in actfl_levels.items():
+    for level, description in actfl_levels_writing.items():
         if st.checkbox(description, key=level):  
             selected_levels.append(level)
     return selected_levels
@@ -125,11 +137,12 @@ def actfl_questions():
 # Show questions based on the framework selected (Writing)
 with st.expander('ACTFL Writing Proficiency Questions'):
     if selected_framework == 'ACTFL (American Council of the Teaching of Foreign Language)':
-        selected_levels = actfl_questions()
+        selected_levels = actfl_writing_questions()
+
 
 
 #Proficiency levels and their descriptions (Speaking)
-actfl_levels = {
+actfl_levels_speaking = {
     'Novice_Low_S': 'I can provide information by answering a few simple questions on very familiar topics, using practiced or memorized words and phrases, with the help of gestures or visuals.',
     'Novice_Mid_S': 'I can request and provide information by asking and answering a few simple questions on very familiar and everyday topics, using a mixture of practiced or memorized words, phrases, and simple sentences.',
     'Novice_High_S': 'I can request and provide information by asking and answering practiced and some original questions on familiar and everyday topics, using simple sentences most of the time.',
@@ -142,10 +155,10 @@ actfl_levels = {
     'Superior_S': 'I can discuss and debate a wide variety of complex issues and abstract ideas using precise, sophisticated, and academic language.'
 }
 
-#checkboxes with unique keys (Speaking)
-def actfl_questions():
+# Define functions for each proficiency category to avoid overwriting actfl_levels (Speaking)
+def actfl_speaking_questions():
     selected_levels = []
-    for level, description in actfl_levels.items():
+    for level, description in actfl_levels_speaking.items():
         if st.checkbox(description, key=level):  
             selected_levels.append(level)
     return selected_levels
@@ -153,7 +166,9 @@ def actfl_questions():
 # Show questions based on the framework selected (Speaking)
 with st.expander('ACTFL Speaking Proficiency Questions'):
     if selected_framework == 'ACTFL (American Council of the Teaching of Foreign Language)':
-        selected_levels = actfl_questions()
+        selected_levels = actfl_speaking_questions()
+
+
 
 
 #Proficiency levels and their descriptions (Reading)
@@ -256,3 +271,23 @@ st.divider()
 st.write('the diagram')
 
 st.write('download')
+
+
+#Thank you message
+Thanks = 'Thank you for taking the time to complete this assessment. This tool is designed to help students gain a clearer understanding of their language proficiency. To continuously improve the student experience, we welcome any feedback on the interface and usability of this site. Please feel free to share any suggestions, comments, or ideas below.'
+st.markdown(f"<div style='text-align: justify;'>{Thanks}</div>", unsafe_allow_html=True)
+st.text_area('', height=150)
+st.divider()
+
+
+#Submit button and Time
+if st.button('Submit'):
+    end_time=time.time()
+    total_time = end_time - start_time
+    minutes, seconds = divmod(total_time, 60)
+st.write(f"Time taken to complete: {int(minutes)} minutes and {int(seconds)} seconds.")
+st.divider()
+
+#Credits
+Thanks = 'Developed by Professor Stéphanie Gaillard in collaboration with Diana Nazari, Data Science Fellow,(DATA 1150). '
+st.markdown(f"<div style='text-align: justify;'>{Thanks}</div>", unsafe_allow_html=True)
