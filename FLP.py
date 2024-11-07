@@ -58,44 +58,80 @@ st.divider()
 
 #Proficiency levels and their descriptions (Reading)
 actfl_levels_reading = {
-    'Novice_Low_R': 'I can identify memorized or familiar words when they are supported by gestures or visuals in informational texts.',
-    'Novice_Mid_R': 'I can identify some basic facts from memorized words and phrases when they are supported by gestures or visuals in informational texts.',
-    'Novice_High_R': 'I can identify some basic facts from memorized words and phrases when they are supported by gestures or visuals in informational texts.',
-    'Intermediate_Low_R': 'I can identify the topic and related information from simple sentences in short informational texts.',
-    'Intermediate_Mid_R': 'I can understand the main idea and key information in short straightforward informational texts.',
-    'Intermediate_High_R': 'I can usually follow the main message in various time frames in straightforward, and sometimes descriptive, paragraph-length informational texts.',
-    'Advanced_Low_R': 'I can identify the underlying message and some supporting details across major time frames in descriptive informational texts.',
-    'Advanced_Mid_R': 'I can understand the underlying message and most supporting details across major time frames in descriptive informational texts.',
-    'Advanced_High_R': 'I can follow the flow of ideas and infer meaning from complex language on unfamiliar, abstract topics within informational texts.',
-    'Superior_R': 'I can read with ease virtually all forms of the written language, including abstract, structurally or linguistically complex texts such as manuals, specialised articles and literary works.'
+    'Novice Low Reading': 'I can identify memorized or familiar words when they are supported by gestures or visuals in informational texts.',
+    'Novice Mid Reading': 'I can identify some basic facts from memorized words and phrases when they are supported by gestures or visuals in informational texts.',
+    'Novice High Reading': 'I can identify some basic facts from memorized words and phrases when they are supported by gestures or visuals in informational texts.',
+    'Intermediate Low Reading': 'I can identify the topic and related information from simple sentences in short informational texts.',
+    'Intermediate Mid Reading': 'I can understand the main idea and key information in short straightforward informational texts.',
+    'Intermediate High Reading': 'I can usually follow the main message in various time frames in straightforward, and sometimes descriptive, paragraph-length informational texts.',
+    'Advanced Low Reading': 'I can identify the underlying message and some supporting details across major time frames in descriptive informational texts.',
+    'Advanced Mid Reading': 'I can understand the underlying message and most supporting details across major time frames in descriptive informational texts.',
+    'Advanced High Reading': 'I can follow the flow of ideas and infer meaning from complex language on unfamiliar, abstract topics within informational texts.',
+    'Superior Reading': 'I can read with ease virtually all forms of the written language, including abstract, structurally or linguistically complex texts such as manuals, specialised articles and literary works.'
 }
 
 # Define functions for each proficiency category to avoid overwriting actfl_levels (Reading)
+### ORIGINAL CODE ####
+# def actfl_reading_questions():
+#     selected_levels = []
+#     for level, description in actfl_levels_reading.items():
+#         if st.checkbox(description, key=level):  
+#             selected_levels.append(level)
+#     return selected_levels
+
+# Mapping levels to numeric values for plotting (Reading)
+level_scores = {level: i+1 for i, level in enumerate(actfl_levels_reading.keys())}
+
+# Function to capture the highest selected ACTFL reading proficiency level (Reading)
 def actfl_reading_questions():
-    selected_levels = []
+    highest_selected_level_reading = None
     for level, description in actfl_levels_reading.items():
         if st.checkbox(description, key=level):  
-            selected_levels.append(level)
-    return selected_levels
+            highest_selected_level_reading = level  # Update to the highest sequentially selected level
+    return highest_selected_level_reading
 
-# Show questions based on the framework selected (Reading)
-with st.expander('ACTFL Reading Proficiency Questions'):
-    if selected_framework == 'ACTFL (American Council of the Teaching of Foreign Language)':
-        selected_levels = actfl_reading_questions()
+
+# Display ACTFL Reading Proficiency Questions if ACTFL is selected
+if selected_framework == 'ACTFL (American Council of the Teaching of Foreign Language)':
+    with st.expander('ACTFL Reading Proficiency Questions'):
+        highest_selected_reading_level = actfl_reading_questions()
+
+    if highest_selected_reading_level:
+        st.write(f"Highest selected ACTFL Reading Level: {highest_selected_reading_level}")
+
+        # Prepare data for the bar chart
+        categories = ['Reading', 'Writing', 'Listening', 'Speaking']
+        
+        # Set the position of the highest level for Reading based on the dictionary order
+        levels = list(actfl_levels_reading.keys())  # Ordered proficiency levels
+        reading_level_index = levels.index(highest_selected_reading_level) if highest_selected_reading_level else 0
+        
+        # Assigning scores to each category (only Reading has a score here)
+        scores = [reading_level_index + 1 if cat == "Reading" else 0 for cat in categories]
+
+        # Plotting
+        plt.figure(figsize=(8, 6))
+        plt.bar(categories, scores, color='skyblue')
+        plt.title("Proficiency Levels Across Skills")
+        plt.xlabel("Skills")
+        plt.ylabel("Proficiency Level")
+        plt.yticks(range(1, len(levels) + 1), levels)  # Use proficiency levels as labels on y-axis
+        st.pyplot(plt)
+
 
 
 #Proficiency levels and their descriptions (Listening)
 actfl_levels_listening = {
-    'Novice_Low_L': 'I can understand memorized or familiar words when they are supported by gestures or visuals in conversations.',
-    'Novice_Mid_L': 'I can understand memorized or familiar words when they are supported by gestures or visuals in conversations.',
-    'Novice_High_L': 'I can understand familiar questions and statements from simple sentences in conversations.',
-    'Intermediate_Low_L': 'I can identify the main idea in short conversations.',
-    'Intermediate_Mid_L': 'I can identify the main idea and key information in short straightforward conversations.',
-    'Intermediate_High_L': 'I can usually understand the main idea and flow of events expressed in various time frames in conversations and discussions.',
-    'Advanced_Low_L': 'I can understand the main message and some supporting details across major time frames in conversations and discussions.',
-    'Advanced_Mid_L': 'I can understand the main message and most supporting details across major time frames in conversations and discussions.',
-    'Advanced_High_L': 'I can follow the flow of ideas and some nuances from different viewpoints in conversations and discussions.',
-    'Superior_L': 'I can follow abstract, complex and unfamiliar topics in extended conversations and discussions involving multiple speakers.'
+    'Novice Low Listening': 'I can understand memorized or familiar words when they are supported by gestures or visuals in conversations.',
+    'Novice Mid Listening': 'I can understand memorized or familiar words when they are supported by gestures or visuals in conversations.',
+    'Novice High Listening': 'I can understand familiar questions and statements from simple sentences in conversations.',
+    'Intermediate Low Listening': 'I can identify the main idea in short conversations.',
+    'Intermediate Mid Listening': 'I can identify the main idea and key information in short straightforward conversations.',
+    'Intermediate High Listening': 'I can usually understand the main idea and flow of events expressed in various time frames in conversations and discussions.',
+    'Advanced Low Listening': 'I can understand the main message and some supporting details across major time frames in conversations and discussions.',
+    'Advanced Mid Listening': 'I can understand the main message and most supporting details across major time frames in conversations and discussions.',
+    'Advanced High Listening': 'I can follow the flow of ideas and some nuances from different viewpoints in conversations and discussions.',
+    'Superior Listening': 'I can follow abstract, complex and unfamiliar topics in extended conversations and discussions involving multiple speakers.'
 }
 
 # Define functions for each proficiency category to avoid overwriting actfl_levels (Listening)
@@ -110,6 +146,18 @@ def actfl_listening_questions():
 with st.expander('ACTFL Listening Proficiency Questions'):
     if selected_framework == 'ACTFL (American Council of the Teaching of Foreign Language)':
         selected_levels = actfl_listening_questions()
+
+# Mapping levels to numeric values for plotting (Listening)
+level_scores = {level: i+1 for i, level in enumerate(actfl_levels_listening.keys())}
+
+# Function to capture the highest selected ACTFL reading proficiency level (Reading)
+def actfl_listening_questions():
+    highest_selected_level_reading = None
+    for level, description in actfl_levels_reading.items():
+        if st.checkbox(description, key=level):  
+            highest_selected_level_listening = level  # Update to the highest sequentially selected level
+    return highest_selected_level_listening
+      
 
 
 #Proficiency levels and their descriptions (Writing)
@@ -140,7 +188,6 @@ with st.expander('ACTFL Writing Proficiency Questions'):
         selected_levels = actfl_writing_questions()
 
 
-
 #Proficiency levels and their descriptions (Speaking)
 actfl_levels_speaking = {
     'Novice_Low_S': 'I can provide information by answering a few simple questions on very familiar topics, using practiced or memorized words and phrases, with the help of gestures or visuals.',
@@ -167,7 +214,6 @@ def actfl_speaking_questions():
 with st.expander('ACTFL Speaking Proficiency Questions'):
     if selected_framework == 'ACTFL (American Council of the Teaching of Foreign Language)':
         selected_levels = actfl_speaking_questions()
-
 
 
 
@@ -282,10 +328,10 @@ st.divider()
 
 #Submit button and Time
 if st.button('Submit'):
-    end_time=time.time()
+    end_time = time.time()
     total_time = end_time - start_time
     minutes, seconds = divmod(total_time, 60)
-st.write(f"Time taken to complete: {int(minutes)} minutes and {int(seconds)} seconds.")
+    st.write(f"Time taken to complete: {int(minutes)} minutes and {int(seconds)} seconds.")
 st.divider()
 
 #Credits
