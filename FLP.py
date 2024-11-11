@@ -9,6 +9,7 @@ start_time = time.time()
 #Header
 st.header('French Language Self-Assessment')
 
+
 #Data Privacy Section
 privacy_text = 'This tool allows you to self-assess your language proficiency. Please complete this assessment in <b>one sitting</b>. If you exit the page, your information will not be saved, and you must restart. The results will help us refine the teaching curriculum and enhance our understanding of how best to support student learning. While the data will be <b>anonymized</b> and <b>only shared with the researcher</b>, you can withhold your data if you prefer. Please select one of the following options to indicate your data privacy preference.'
 st.markdown(f"<div style='text-align: justify;'>{privacy_text}</div>", unsafe_allow_html=True)
