@@ -1,60 +1,80 @@
 import streamlit as st
 import time
+from datetime import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
+import write_csv
 
 #Recording the start time
 start_time = time.time()
 
 #Header
 st.header('French Language Self-Assessment')
-
+responses = {}
 
 #Data Privacy Section
-privacy_text = 'This tool allows you to self-assess your language proficiency. Please complete this assessment in <b>one sitting</b>. If you exit the page, your information will not be saved, and you must restart. The results will help us refine the teaching curriculum and enhance our understanding of how best to support student learning. While the data will be <b>anonymized</b> and <b>only shared with the researcher</b>, you can withhold your data if you prefer. Please select one of the following options to indicate your data privacy preference.'
+privacy_text = privacy_text = '''
+This tool allows you to self-assess your language proficiency. Please complete this assessment in 
+<b style="color:blue;">one sitting</b>. If you exit the page, your information will not be saved, and you must restart. 
+The results will help us refine the teaching curriculum and enhance our understanding of how best to support student learning. 
+While the data will be <b style="color:blue;">anonymized</b> and <b style="color:blue;">only shared with the researcher</b>, 
+you can withhold your data if you prefer. Please select one of the following options to indicate your data privacy preference.
+'''
 st.markdown(f"<div style='text-align: justify;'>{privacy_text}</div>", unsafe_allow_html=True)
-st.radio('',['I consent to sharing my data','I do not consent to sharing my data'])
+consent = st.radio('',['I consent to sharing my data','I do not consent to sharing my data'])
 st.divider()
+responses['Do you consent to sharing your data?'] = consent
 
 #Age
 Age = 'What is your age?'
 st.markdown(f"<div style='text-align: justify;'>{Age}</div>", unsafe_allow_html=True)
-st.number_input('', min_value=0, max_value=120, step=1)
+age_answer = st.number_input('', min_value=0, max_value=120, step=1)
 st.divider()
+responses[Age] = age_answer
 
 #French speaking environment
 Speaking_environment = 'Do you live in a French speaking environment?'
 st.markdown(f"<div style='text-align: justify;'>{Speaking_environment}</div>", unsafe_allow_html=True)
-st.radio('',['Yes','No'])
+Speaking_environment_answer = st.radio('',['Yes','No'])
 st.divider()
+responses[Speaking_environment] = Speaking_environment_answer 
 
 #Previous experience: Semesters and Quarters
 semesters = 'How many semesters have you completed?'
 st.markdown(f"<div style='text-align: justify;'>{semesters}</div>", unsafe_allow_html=True)
-st.number_input(' ', min_value=0, max_value=120, step=1)
+semesters_answer = st.number_input(' ', min_value=0, max_value=120, step=1)
 quarters = 'How many quarters have you completed?'
 st.markdown(f"<div style='text-align: justify;'>{quarters}</div>", unsafe_allow_html=True)
-st.number_input('  ', min_value=0, max_value=120, step=1)
+quarters_answer = st.number_input('  ', min_value=0, max_value=120, step=1)
 st.divider()
+responses[semesters] = semesters_answer
+responses[quarters] = quarters_answer
 
 #Current perception of student on their profeciency level
 student_perception = 'Before you begin the questionnaire, please take a moment to reflect on your language skills. Rate your level of proficiency for each of the following skills: reading, writing, speaking, and listening.'
 st.markdown(f"<div style='text-align: justify;'>{student_perception}</div>", unsafe_allow_html=True)
 st.write('')
-st.select_slider('Reading',['Beginner','Intermediate','Advanced','Superior'])
+reading_answer=st.select_slider('Reading',['Beginner','Intermediate','Advanced','Superior'])
 st.write('')
-st.select_slider('Listening',['Beginner','Intermediate','Advanced','Superior'])
+listening_answer =st.select_slider('Listening',['Beginner','Intermediate','Advanced','Superior'])
 st.write('')
-st.select_slider('Writing',['Beginner','Intermediate','Advanced','Superior'])
+writing_answer = st.select_slider('Writing',['Beginner','Intermediate','Advanced','Superior'])
 st.write('')
-st.select_slider('Speaking',['Beginner','Intermediate','Advanced','Superior'])
+speaking_answer = st.select_slider('Speaking',['Beginner','Intermediate','Advanced','Superior'])
 st.divider()
 
+responses['Rate your reading profeciency'] = reading_answer
+responses['Rate your listening profeciency'] = listening_answer
+responses['Rate your writing profeciency'] = writing_answer
+responses['Rate your speaking profeciency'] = speaking_answer
+
 #Choosing between American/European Frameworks
-frameworks = 'Choose between one of the following language frameworks. Check the boxes that you are confident you can perform <b>95 percent</b> of the time. Be sure to check the box only if you can <b>consistently</b> achieve this level of proficiency in reading, writing, listening, or speaking. Please read each description carefully and select the checkboxes <b>in order</b>. Ensure that you check each box <b>sequentially</b> (i.e., start with 1, then 2, and so on) before moving to the next.'
+frameworks = 'Choose between one of the following language frameworks. Check the boxes that you are confident you can perform <b style="color:blue;">95 percent</b> of the time. Be sure to check the box only if you can <b style="color:blue;">consistently</b> achieve this level of proficiency in reading, writing, listening, or speaking. Please read each description carefully and select the checkboxes <b style="color:blue;">in order</b>. Ensure that you check each box <b style="color:blue;">sequentially</b> (i.e., start with 1, then 2, and so on) before moving to the next.'
 st.markdown(f"<div style='text-align: justify;'>{frameworks}</div>", unsafe_allow_html=True)
 selected_framework = st.radio('',['ACTFL (American Council of the Teaching of Foreign Language)','CEFRL (Common European Framework of Reference for Languages)'])
 st.divider()
+
+responses['Choose between one of the language frameworks'] = selected_framework
 
 
 # Define proficiency levels for common y-axis labels
@@ -128,6 +148,15 @@ actfl_levels_speaking = {
     'Superior': 'I can discuss and debate a wide variety of complex issues and abstract ideas using precise, sophisticated, and academic language.'
 }
 
+consent_question = "Do you sent to sharing your data?"
+time_taken = "Time Taken for Questionnaire"
+Reading_question = 'Rate your level of reading proficiency'
+Listening_question = 'Rate your level of listening proficiency'
+Writing_question = 'Rate your level of writing proficiency'
+Speaking_question = 'Rate your level of speaking proficiency'
+language_frameworks = 'Choose between one of the language frameworks'
+
+
 
 # Function to capture highest selected level for a skill
 def get_highest_level_actfl(level_descriptions, skill_name):
@@ -142,15 +171,25 @@ skill_scores = {}
 if selected_framework == 'ACTFL (American Council of the Teaching of Foreign Language)':
     with st.expander('ACTFL Reading Proficiency Questions'):
         skill_scores['Reading'] = get_highest_level_actfl(actfl_levels_reading, 'Reading')
+        responses['ACTFL Reading Proficiency Questions'] = skill_scores['Reading']
 
     with st.expander('ACTFL Listening Proficiency Questions'):
         skill_scores['Listening'] = get_highest_level_actfl(actfl_levels_listening, 'Listening')
+        responses['ACTFL Listening Proficiency Questions'] = skill_scores['Listening']
 
     with st.expander('ACTFL Writing Proficiency Questions'):
         skill_scores['Writing'] = get_highest_level_actfl(actfl_levels_writing, 'Writing')
+        responses['ACTFL Writing Proficiency Questions'] = skill_scores['Writing']
 
     with st.expander('ACTFL Speaking Proficiency Questions'):
         skill_scores['Speaking'] = get_highest_level_actfl(actfl_levels_speaking, 'Speaking')
+        responses['ACTFL Speaking Proficiency Questions'] = skill_scores['Speaking']
+else: 
+    responses['ACTFL Reading Proficiency Questions'] = 'NA'
+    responses['ACTFL Listening Proficiency Questions'] = 'NA'
+    responses['ACTFL Writing Proficiency Questions'] = 'NA'
+    responses['ACTFL Speaking Proficiency Questions'] = 'NA'
+
 
 
 
@@ -233,15 +272,24 @@ skill_scores = {}
 if selected_framework == ('CEFRL (Common European Framework of Reference for Languages)'):
     with st.expander('CEFRL Reading Proficiency Questions'):
         skill_scores['Reading'] = get_highest_level_cefrl(cefrl_levels_reading, 'Reading')
+        responses['CEFRL Reading Proficiency Questions'] = skill_scores['Reading']
 
     with st.expander('CEFRL Listening Proficiency Questions'):
         skill_scores['Listening'] = get_highest_level_cefrl(cefrl_levels_listening, 'Listening')
+        responses['CEFRL Listening Proficiency Questions'] = skill_scores['Listening']
 
     with st.expander('CEFRL Writing Proficiency Questions'):
         skill_scores['Writing'] = get_highest_level_cefrl(cefrl_levels_writing, 'Writing')
+        responses['CEFRL Writing Proficiency Questions'] = skill_scores['Writing']
 
     with st.expander('CEFRL Speaking Proficiency Questions'):
         skill_scores['Speaking'] = get_highest_level_cefrl(cefrl_levels_speaking, 'Speaking')
+        responses['CEFRL Speaking Proficiency Questions'] = skill_scores['Speaking']
+else: 
+    responses['CEFRL Reading Proficiency Questions'] = 'NA'
+    responses['CEFRL Listening Proficiency Questions'] = 'NA'
+    responses['CEFRL Writing Proficiency Questions'] = 'NA'
+    responses['CEFRL Speaking Proficiency Questions'] = 'NA'
 
 
 # Generate bar chart if any skill level was selected
@@ -254,29 +302,34 @@ if any(skill_scores.values()):
     plt.ylabel("Proficiency Level")
     plt.yticks(list(proficiency_levels_cefrl.values()), list(proficiency_levels_cefrl.keys()))
     st.pyplot(plt)
-
 st.divider()
 
 
 #Thank you message
 Thanks = 'Thank you for taking the time to complete this assessment. This tool is designed to help students gain a clearer understanding of their language proficiency. To continuously improve student experience, we welcome any feedback on the interface and usability of this site. Please feel free to share any suggestions, comments, or ideas below.'
 st.markdown(f"<div style='text-align: justify;'>{Thanks}</div>", unsafe_allow_html=True)
-st.text_area('', height=150)
+feedback_text = st.text_area('', height=150)
 st.divider()
+responses['Do you have any feedback'] = feedback_text
 
-
-#Submit button and Time
+# Submit button and time
 if st.button('Submit'):
     end_time = time.time()
     total_time = end_time - start_time
     minutes, seconds = divmod(total_time, 60)
+    completion_date = datetime.now().strftime("%Y-%m-%d")  # Record the current date
+    responses[time_taken] = total_time
+    responses['Completion Date'] = completion_date
     st.write(f"Time taken to complete: {int(minutes)} minutes and {int(seconds)} seconds.")
+    st.write(f"Date of completion: {completion_date}")
+    write_csv.write_csv(responses.values(), responses.keys())
 st.divider()
 
-#Credits
+
 # Credits text
-Thanks = 'Developed by Professor Stéphanie Gaillard in collaboration with Diana Nazari, Data Science Fellow (DATA 1150).'
+Thanks = 'Developed by Professor Stéphanie Gaillard in collaboration with Diana Nazari, Data Science Fellow at Brown University (DATA 1150), Fall 2024.'
 st.markdown(
     f"<div style='text-align: center;'>{Thanks}</div>",
     unsafe_allow_html=True
 )
+
