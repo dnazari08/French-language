@@ -4,6 +4,20 @@ from datetime import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 import write_csv
+import os
+
+
+# Function to map numeric proficiency levels to keys for saving to CSV
+def map_proficiency_levels_for_csv(data, numeric_to_string_mapping):
+    mapped_data = {}
+    for key, value in data.items():
+        if key in ["ACTFL Reading Proficiency Questions", "ACTFL Listening Proficiency Questions",
+                   "ACTFL Writing Proficiency Questions", "ACTFL Speaking Proficiency Questions"]:
+            mapped_data[key] = numeric_to_string_mapping.get(value, value)
+        else:
+            mapped_data[key] = value
+    return mapped_data
+
 
 #Recording the start time
 start_time = time.time()
@@ -322,7 +336,23 @@ if st.button('Submit'):
     responses['Completion Date'] = completion_date
     st.write(f"Time taken to complete: {int(minutes)} minutes and {int(seconds)} seconds.")
     st.write(f"Date of completion: {completion_date}")
-    write_csv.write_csv(responses.values(), responses.keys())
+    
+    # Map numeric values to keys for saving to CSV
+    proficiency_mapping_reverse = {
+        1: 'Novice Low',
+        2: 'Novice Mid',
+        3: 'Novice High',
+        4: 'Intermediate Low',
+        5: 'Intermediate Mid',
+        6: 'Intermediate High',
+        7: 'Advanced Low',
+        8: 'Advanced Mid',
+        9: 'Advanced High',
+        10: 'Superior'
+    }
+    responses_csv = map_proficiency_levels_for_csv(responses, proficiency_mapping_reverse)
+    write_csv.write_csv(responses_csv.values(), responses_csv.keys())
+    
 st.divider()
 
 
